@@ -105,7 +105,7 @@
   when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') and install_cockpit
 
 - name: install python test deps
-  command: pip install -r test-requirements.txt
+  command: "{{pip_version}} install -r test-requirements.txt"
   args:
     chdir: /vagrant
   become: yes
