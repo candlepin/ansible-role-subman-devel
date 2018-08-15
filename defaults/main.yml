@@ -7,6 +7,7 @@ subman_use_tito: True
 subman_modify_repos: True
 subman_python_interpreter: /usr/bin/python
 distro_package_command: yum
+pip_version: pip
 distro_specific_deps:
   - dbus-x11
   - gcc
