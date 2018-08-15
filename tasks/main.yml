@@ -6,33 +6,6 @@
         - "{{ ansible_distribution }}.yml"
       paths: vars
       skip: yes
-
-# workaround for https://github.com/ansible/ansible/pull/24179
-# FIXME remove when possible
-- name: configure rhsm hostname (rhel only)
-  command: "subscription-manager config --server.hostname {{ subman_rhsm_hostname }}"
-  become: yes
-  when: subman_rhsm_hostname is defined and ansible_distribution == 'RedHat' and subman_modify_repos
-
-- name: configure rhsm port (rhel only)
-  command: "subscription-manager config --server.port {{ subman_rhsm_port }}"
-  become: yes
-  when: subman_rhsm_port is defined and ansible_distribution == 'RedHat' and subman_modify_repos
-
-- name: configure rhsm insecure (rhel only)
-  command: "subscription-manager config --server.insecure {{ subman_rhsm_insecure }}"
-  become: yes
-  when: subman_rhsm_insecure is defined and ansible_distribution == 'RedHat' and subman_modify_repos
-
-- name: register and attach using installed subscription-manager (rhel only)
-  redhat_subscription:
-    username: "{{ subman_rhsm_username }}"
-    password: "{{ subman_rhsm_password }}"
-    server_hostname: "{{ subman_rhsm_hostname }}"
-    autosubscribe: yes
-  become: yes
-  when: subman_rhsm_username is defined and ansible_distribution == 'RedHat' and subman_modify_repos
-
 - name: install epel (centos)
   yum:
     name: epel-release
@@ -44,11 +17,6 @@
   yum:
     name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     state: present
-  become: yes
-  when: ansible_distribution == 'RedHat' and subman_modify_repos
-
-- name: enable optional repos (rhel only)
-  command: "subscription-manager repos --enable rhel-{{ ansible_distribution_major_version }}-server-optional-rpms"
   become: yes
   when: ansible_distribution == 'RedHat' and subman_modify_repos
 
@@ -137,21 +105,10 @@
   when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') and install_cockpit
 
 - name: install python test deps
-  pip:
-    requirements: "{{ subman_checkout_dir }}/test-requirements.txt"
+  command: pip install -r test-requirements.txt
+  args:
+    chdir: /vagrant
   become: yes
-
-- name: clean build artifacts
-  command: make clean
-  args:
-    chdir: "{{ subman_checkout_dir }}"
-  when: subman_setup_hacking_environment
-
-- name: build
-  command: "{{ subman_python_interpreter }} setup.py build_ext --inplace"
-  args:
-    chdir: "{{ subman_checkout_dir }}"
-  when: subman_setup_hacking_environment
 
 - name: tito build subscription-manager (initial)
   command: tito build --test --rpm
@@ -167,12 +124,6 @@
     creates: /usr/lib*/python*/site-packages/subscription_manager
   become: yes
   when: subman_setup_hacking_environment and not (ansible_distribution == 'Debian') and subman_use_tito
-
-- name: alter PATH
-  template:
-    src: subman_devel.sh.j2
-    dest: /etc/profile.d/subman_devel.sh
-  become: yes
 
 - name: alter PYTHONPATH
   copy:
@@ -235,18 +186,6 @@
   become: yes
   when: subman_setup_hacking_environment and install_cockpit
 
-- name: yarn install (for convenience)
-  command: yarn install
-  args:
-    chdir: /vagrant/cockpit
-  when: not (ansible_distribution == 'Debian')
-
-- name: webpack build (for convenience)
-  command: npm run build
-  args:
-    chdir: /vagrant/cockpit
-  when: not (ansible_distribution == 'Debian')
-
 - name: add symlink to dist for cockpit plugin
   file:
     src: /vagrant/cockpit/dist
@@ -255,15 +194,6 @@
     force: yes
   become: yes
   when: subman_setup_hacking_environment and install_cockpit
-
-- name: add candlepin.example.com to hosts (using this host as reference)
-  lineinfile:
-    name: /etc/hosts
-    line: "{{ lookup('pipe', 'resolveip -s candlepin.example.com') }} candlepin.example.com"
-    regexp: 'candlepin.example.com'
-  become: yes
-  ignore_errors: yes
-  when: subman_add_vagrant_candlepin_to_hosts
 
 - name: update glibc-common if not already latest
   package:
@@ -275,10 +205,20 @@
   become: true
   command: yum -y reinstall glibc-common
 
-- name: replace RHSM service file with shim
+- name: Make fake Xauthority (if needed)
   copy:
-    src: rhsm_service_shim.py
-    dest: /usr/libexec/rhsm-service
-    force: yes
-  become: yes
-  when: subman_setup_hacking_environment
+    content: ""
+    owner: vagrant
+    group: vagrant
+    dest: /home/vagrant/.Xauthority
+    force: no
+  tags:
+    - xauth
+
+- name: link vagrant's Xauthority to root user
+  file:
+    src: /home/vagrant/.Xauthority
+    dest: /root/.Xauthority
+    state: link
+  tags:
+    - xauth
