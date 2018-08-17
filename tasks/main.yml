@@ -220,5 +220,6 @@
     src: /home/vagrant/.Xauthority
     dest: /root/.Xauthority
     state: link
+  become: yes
   tags:
     - xauth
