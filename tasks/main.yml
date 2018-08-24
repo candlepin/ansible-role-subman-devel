@@ -223,3 +223,9 @@
   become: yes
   tags:
     - xauth
+
+- name: add rhsm.certificate compile hack to .bashrc
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "test {{ subman_checkout_dir }}/src/rhsm/*certificate*.so -nt {{ subman_checkout_dir }}/src/certificate.c || (cd {{ subman_checkout_dir}}; {{ subman_python_interpreter }} setup.py build_ext --inplace 2>&1 > /dev/null)"
+  when: subman_setup_hacking_environment
