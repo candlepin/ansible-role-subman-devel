@@ -22,7 +22,7 @@
 
 - name: install spacewalk repo (openSUSE Leap)
   get_url:
-    url: http://download.opensuse.org/repositories/systemsmanagement:/spacewalk/openSUSE_Leap_42.2/systemsmanagement:spacewalk.repo
+    url: https://download.opensuse.org/repositories/systemsmanagement:/spacewalk:/2.6/openSUSE_Leap_42.2/systemsmanagement:spacewalk:2.6.repo
     dest: /etc/zypp/repos.d/
   become: yes
   when: ansible_distribution == 'openSUSE Leap' and subman_modify_repos
