@@ -27,3 +27,15 @@ distro_specific_deps:
 libexec_path: /usr/libexec
 install_cockpit: True
 sitecustomize_path: /usr/lib/python{{ ansible_python_version|regex_replace('^([^\.]*\.[^\.]*)\..*$', '\1') }}/site-packages/sitecustomize.py
+builddep_command: yum-builddep
+setup_xforwarding: yes
+subman_script_wrappers:
+  subscription-manager: subscription_manager.scripts.subscription_manager
+  syspurpose: syspurpose.main
+  rct: subscription_manager.scripts.rct
+  rhn-migrate-classic-to-rhsm: subscription_manager.scripts.rhn_migrate_classic_to_rhsm
+  rhsmd: subscription_manager.scripts.rhsm_d
+  rhsm-debug: subscription_manager.scripts.rhsm_debug
+  rhsm-facts-service: subscription_manager.scripts.rhsm_facts_service
+  rhsm-service: subscription_manager.scripts.rhsm_service
+  rhsmcertd-worker: subscription_manager.scripts.rhsmcertd_worker
