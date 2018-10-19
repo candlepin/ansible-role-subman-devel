@@ -200,10 +200,12 @@
     name: glibc-common
     state: latest
   become: yes
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
 
 - name: reinstall glibc-common to lay down langs
   become: true
   command: yum -y reinstall glibc-common
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
 
 - name: Make fake Xauthority (if needed)
   copy:
