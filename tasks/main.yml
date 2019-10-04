@@ -105,7 +105,7 @@
   when: install_cockpit
 
 - include: cockpit.yml
-  when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') and install_cockpit
+  when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') or (ansible_distribution == 'RedHat' and (ansible_distribution_major_version == '8' or ansible_distribution_major_version == '7')) and install_cockpit
 
 - name: install python test deps
   command: "{{pip_version}} install -r test-requirements.txt"
