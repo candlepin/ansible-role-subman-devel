@@ -249,3 +249,10 @@
     mode: 0555
   become: yes
   loop: "{{ subman_script_wrappers | dict2items }}"
+
+- name: Remove /usr/bin/subscription-manager
+  file:
+    path: "/usr/bin/subscription-manager"
+    state: absent
+  become: yes
+  when: subman_setup_hacking_environment
