@@ -256,3 +256,10 @@
     state: absent
   become: yes
   when: subman_setup_hacking_environment
+  
+- name: Remove /usr/share/cockpit/subscription-manager
+  file:
+    path: "/usr/share/cockpit/subscription-manager"
+    state: absent
+  become: yes
+  when: subman_setup_hacking_environment
