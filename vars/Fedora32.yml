@@ -12,8 +12,9 @@ distro_specific_deps:
   - python3-dbus
   - subscription-manager
   - tito
+  - yarnpkg
   - xorg-x11-server-Xvfb
 builddep_command: dnf builddep
 distro_package_command: dnf
 subman_python_interpreter: python3
-subman_nodejs_version: v14.7.0
+install_yarn_via_npm: False

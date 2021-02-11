@@ -112,7 +112,7 @@
     global: yes
   environment:
     PATH: "{{ ansible_user_dir }}/.nvm/versions/node/{{ subman_nodejs_version }}/bin"
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - include: cockpit.yml
   when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') or (ansible_distribution == 'RedHat' and (ansible_distribution_major_version == '8' or ansible_distribution_major_version == '7')) and install_cockpit
