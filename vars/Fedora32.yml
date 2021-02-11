@@ -5,7 +5,6 @@ distro_specific_deps:
   - git
   - koji
   - librsvg2
-  - libselinux-python
   - libxslt-devel
   - make
   - python3-dmidecode
