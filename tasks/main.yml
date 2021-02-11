@@ -1,4 +1,13 @@
 ---
+- name: load distribution-specific vars (major version)
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
+      paths: vars
+      skip: yes
+  register: distro_vars
+
 - name: load distribution-specific vars
   include_vars: "{{ item }}"
   with_first_found:
@@ -6,6 +15,7 @@
         - "{{ ansible_distribution }}.yml"
       paths: vars
       skip: yes
+  when: not distro_vars
 - name: install epel (centos)
   yum:
     name: epel-release

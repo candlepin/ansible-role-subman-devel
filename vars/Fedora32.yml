@@ -1,0 +1,19 @@
+distro_specific_deps:
+  - dbus-x11
+  - dnf-utils
+  - gcc
+  - git
+  - koji
+  - librsvg2
+  - libselinux-python
+  - libxslt-devel
+  - make
+  - python3-dmidecode
+  - python3-ethtool
+  - python3-dbus
+  - subscription-manager
+  - tito
+  - xorg-x11-server-Xvfb
+builddep_command: dnf builddep
+distro_package_command: dnf
+subman_python_interpreter: python3
