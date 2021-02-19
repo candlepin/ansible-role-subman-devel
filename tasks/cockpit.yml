@@ -17,6 +17,7 @@
     name: webpack
     global: yes
     path: /vagrant/subscription-manager/cockpit
+  become: yes
 
 - name: install cockpit packages
   npm:
