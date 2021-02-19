@@ -11,3 +11,14 @@
     enabled: yes
     state: started
   become: yes
+
+- name: install webpack globally
+  npm:
+    name: webpack
+    global: yes
+    path: /vagrant/subscription-manager/cockpit
+
+- name: install cockpit packages
+  npm:
+    state: latest
+    path: /vagrant/subscription-manager/cockpit

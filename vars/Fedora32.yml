@@ -7,12 +7,12 @@ distro_specific_deps:
   - librsvg2
   - libxslt-devel
   - make
+  - npm
   - python3-dmidecode
   - python3-ethtool
   - python3-dbus
   - subscription-manager
   - tito
-  - yarnpkg
   - xorg-x11-server-Xvfb
 builddep_command: dnf builddep
 distro_package_command: dnf

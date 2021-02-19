@@ -93,7 +93,7 @@
   args:
     creates: "{{ ansible_user_dir }}/.nvm"
     warn: no
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - name: use nvm to install nodejs
   shell: >
@@ -103,7 +103,7 @@
     nvm alias default {{ subman_nodejs_version }}"
   args:
     creates: "{{ ansible_user_dir }}/.nvm/versions/node/{{ subman_nodejs_version }}"
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - name: install yarn (for cockpit package build)
   npm:
