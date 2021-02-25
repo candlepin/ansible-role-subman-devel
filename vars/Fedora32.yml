@@ -3,6 +3,7 @@ distro_specific_deps:
   - dnf-utils
   - gcc
   - git
+  - glibc-all-langpacks
   - koji
   - librsvg2
   - libxslt-devel
@@ -11,6 +12,7 @@ distro_specific_deps:
   - python3-dmidecode
   - python3-ethtool
   - python3-dbus
+  - pygtk2
   - subscription-manager
   - tito
   - xorg-x11-server-Xvfb
