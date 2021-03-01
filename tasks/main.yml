@@ -1,4 +1,13 @@
 ---
+- name: load distribution-specific vars (major version)
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
+      paths: vars
+      skip: yes
+  register: distro_vars
+
 - name: load distribution-specific vars
   include_vars: "{{ item }}"
   with_first_found:
@@ -6,6 +15,7 @@
         - "{{ ansible_distribution }}.yml"
       paths: vars
       skip: yes
+  when: not distro_vars
 - name: install epel (centos)
   yum:
     name: epel-release
@@ -83,7 +93,7 @@
   args:
     creates: "{{ ansible_user_dir }}/.nvm"
     warn: no
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - name: use nvm to install nodejs
   shell: >
@@ -93,7 +103,7 @@
     nvm alias default {{ subman_nodejs_version }}"
   args:
     creates: "{{ ansible_user_dir }}/.nvm/versions/node/{{ subman_nodejs_version }}"
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - name: install yarn (for cockpit package build)
   npm:
@@ -102,7 +112,7 @@
     global: yes
   environment:
     PATH: "{{ ansible_user_dir }}/.nvm/versions/node/{{ subman_nodejs_version }}/bin"
-  when: install_cockpit
+  when: install_cockpit and install_yarn_via_npm
 
 - include: cockpit.yml
   when: ansible_distribution == 'Fedora' or (ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7') or (ansible_distribution == 'RedHat' and (ansible_distribution_major_version == '8' or ansible_distribution_major_version == '7')) and install_cockpit
