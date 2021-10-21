@@ -26,6 +26,7 @@ distro_specific_deps:
   - yum-utils
 libexec_path: /usr/libexec
 install_cockpit: True
+install_yarn_via_npm: True
 sitecustomize_path: /usr/lib/python{{ ansible_python_version|regex_replace('^([^\.]*\.[^\.]*)\..*$', '\1') }}/site-packages/sitecustomize.py
 builddep_command: yum-builddep
 setup_xforwarding: yes

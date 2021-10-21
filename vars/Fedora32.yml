@@ -1,0 +1,22 @@
+distro_specific_deps:
+  - dbus-x11
+  - dnf-utils
+  - gcc
+  - git
+  - glibc-all-langpacks
+  - koji
+  - librsvg2
+  - libxslt-devel
+  - make
+  - npm
+  - python3-dmidecode
+  - python3-ethtool
+  - python3-dbus
+  - pygtk2
+  - subscription-manager
+  - tito
+  - xorg-x11-server-Xvfb
+builddep_command: dnf builddep
+distro_package_command: dnf
+subman_python_interpreter: python3
+install_yarn_via_npm: False
